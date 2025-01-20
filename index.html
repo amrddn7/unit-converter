@@ -56,6 +56,129 @@ body {
 // Array to store saved conversions
 const savedConversions = [];
 
+// Conversion factors
+const lengthConversions = {
+    meter: {
+        meter: 1,
+        kilometer: 0.001,
+        centimeter: 100,
+        millimeter: 1000,
+        inch: 39.3701,
+        foot: 3.28084,
+        mile: 0.000621371
+    },
+    kilometer: {
+        meter: 1000,
+        kilometer: 1,
+        centimeter: 100000,
+        millimeter: 1000000,
+        inch: 39370.1,
+        foot: 3280.84,
+        mile: 0.621371
+    },
+    centimeter: {
+        meter: 0.01,
+        kilometer: 0.00001,
+        centimeter: 1,
+        millimeter: 10,
+        inch: 0.393701,
+        foot: 0.0328084,
+        mile: 0.00000621371
+    },
+    millimeter: {
+        meter: 0.001,
+        kilometer: 0.000001,
+        centimeter: 0.1,
+        millimeter: 1,
+        inch: 0.0393701,
+        foot: 0.00328084,
+        mile: 0.000000621371
+    },
+    inch: {
+        meter: 0.0254,
+        kilometer: 0.0000254,
+        centimeter: 2.54,
+        millimeter: 25.4,
+        inch: 1,
+        foot: 0.0833333,
+        mile: 0.0000157828
+    },
+    foot: {
+        meter: 0.3048,
+        kilometer: 0.0003048,
+        centimeter: 30.48,
+        millimeter: 304.8,
+        inch: 12,
+        foot: 1,
+        mile: 0.000189394
+    },
+    mile: {
+        meter: 1609.34,
+        kilometer: 1.60934,
+        centimeter: 160934,
+        millimeter: 1609340,
+        inch: 63360,
+        foot: 5280,
+        mile: 1
+    }
+};
+
+const massConversions = {
+    kilogram: {
+        kilogram: 1,
+        gram: 1000,
+        milligram: 1000000,
+        pound: 2.20462,
+        ounce: 35.274
+    },
+    gram: {
+        kilogram: 0.001,
+        gram: 1,
+        milligram: 1000,
+        pound: 0.00220462,
+        ounce: 0.035274
+    },
+    milligram: {
+        kilogram: 0.000001,
+        gram: 0.001,
+        milligram: 1,
+        pound: 0.00000220462,
+        ounce: 0.000035274
+    },
+    pound: {
+        kilogram: 0.453592,
+        gram: 453.592,
+        milligram: 453592,
+        pound: 1,
+        ounce: 16
+    },
+    ounce: {
+        kilogram: 0.0283495,
+        gram: 28.3495,
+        milligram: 28349.5,
+        pound: 0.0625,
+        ounce: 1
+    }
+};
+
+const temperatureConversions = {
+    Celsius: {
+        Celsius: 1,
+        Fahrenheit: (value) => (value * 9/5) + 32,
+        Kelvin: (value) => value + 273.15
+    },
+    Fahrenheit: {
+        Celsius: (value) => (value - 32) * 5/9,
+        Fahrenheit: 1,
+        Kelvin: (value) => ((value - 32) * 5/9) + 273.15
+    },
+    Kelvin: {
+        Celsius: (value) => value - 273.15,
+        Fahrenheit: (value) => (value - 273.15) * 9/5 + 32,
+        Kelvin: 1
+    }
+};
+
 // Function to populate unit selection options
 function populateUnits() {
     const unitType = document.getElementById("unitType").value;
@@ -66,20 +189,32 @@ function populateUnits() {
     toUnitSelect.innerHTML = "";
 
     if (unitType === "length") {
-        const units = ["meter", "kilometer", "centimeter", "millimeter", "inch", "foot", "mile"];
+        const units = Object.keys(lengthConversions);
         units.forEach(unit => {
             const option = document.createElement("option");
             option.value = unit;
             option.text = unit;
             fromUnitSelect.appendChild(option);
-            toUnitSelect.appendChild(option.cloneNode(true)); 
+            toUnitSelect.appendChild(option.cloneNode(true));
         });
     } else if (unitType === "mass") {
-        const units = ["kilogram", "gram", "milligram", "pound", "ounce"];
-        // ... (similar to length)
+        const units = Object.keys(massConversions);
+        units.forEach(unit => {
+            const option = document.createElement("option");
+            option.value = unit;
+            option.text = unit;
+            fromUnitSelect.appendChild(option);
+            toUnitSelect.appendChild(option.cloneNode(true));
+        });
     } else if (unitType === "temperature") {
-        const units = ["Celsius", "Fahrenheit", "Kelvin"];
-        // ... (similar to length)
+        const units = Object.keys(temperatureConversions);
+        units.forEach(unit => {
+            const option = document.createElement("option");
+            option.value = unit;
+            option.text = unit;
+            fromUnitSelect.appendChild(option);
+            toUnitSelect.appendChild(option.cloneNode(true));
+        });
     }
 }
 
@@ -99,44 +234,5 @@ function convert() {
     let result;
 
     if (unitType === "length") {
-        // ... (conversion logic for length units)
-    } else if (unitType === "mass") {
-        // ... (conversion logic for mass units)
-    } else if (unitType === "temperature") {
-        // ... (conversion logic for temperature units)
-    }
-
-    resultDiv.innerHTML = inputValue + " " + fromUnit + " = " + result + " " + toUnit;
-
-    // Save the conversion
-    saveConversion(inputValue, fromUnit, toUnit, result);
-}
-
-// Function to save conversions
-function saveConversion(inputValue, fromUnit, toUnit, result) {
-    const conversion = {
-        inputValue: inputValue,
-        fromUnit: fromUnit,
-        toUnit: toUnit,
-        result: result
-    };
-    savedConversions.push(conversion);
-
-    // Update the saved conversions list
-    const savedConversionsList = document.getElementById("savedConversions");
-    savedConversionsList.innerHTML = "";
-    savedConversions.forEach(conv => {
-        const listItem = document.createElement("li");
-        listItem.textContent = `${conv.inputValue} ${conv.fromUnit} = ${conv.result} ${conv.toUnit}`;
-        savedConversionsList.appendChild(listItem);
-    });
-}
-
-// Initial setup
-document.getElementById("unitType").addEventListener("change", populateUnits);
-populateUnits(); 
-
-</script>
-
-</body>
-</html>
+        result = inputValue * lengthConversions[fromUnit][toUnit];
+    } else if (unitType ===
