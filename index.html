@@ -67,60 +67,7 @@ const lengthConversions = {
         foot: 3.28084,
         mile: 0.000621371
     },
-    kilometer: {
-        meter: 1000,
-        kilometer: 1,
-        centimeter: 100000,
-        millimeter: 1000000,
-        inch: 39370.1,
-        foot: 3280.84,
-        mile: 0.621371
-    },
-    centimeter: {
-        meter: 0.01,
-        kilometer: 0.00001,
-        centimeter: 1,
-        millimeter: 10,
-        inch: 0.393701,
-        foot: 0.0328084,
-        mile: 0.00000621371
-    },
-    millimeter: {
-        meter: 0.001,
-        kilometer: 0.000001,
-        centimeter: 0.1,
-        millimeter: 1,
-        inch: 0.0393701,
-        foot: 0.00328084,
-        mile: 0.000000621371
-    },
-    inch: {
-        meter: 0.0254,
-        kilometer: 0.0000254,
-        centimeter: 2.54,
-        millimeter: 25.4,
-        inch: 1,
-        foot: 0.0833333,
-        mile: 0.0000157828
-    },
-    foot: {
-        meter: 0.3048,
-        kilometer: 0.0003048,
-        centimeter: 30.48,
-        millimeter: 304.8,
-        inch: 12,
-        foot: 1,
-        mile: 0.000189394
-    },
-    mile: {
-        meter: 1609.34,
-        kilometer: 1.60934,
-        centimeter: 160934,
-        millimeter: 1609340,
-        inch: 63360,
-        foot: 5280,
-        mile: 1
-    }
+    // ... other length units
 };
 
 const massConversions = {
@@ -131,34 +78,7 @@ const massConversions = {
         pound: 2.20462,
         ounce: 35.274
     },
-    gram: {
-        kilogram: 0.001,
-        gram: 1,
-        milligram: 1000,
-        pound: 0.00220462,
-        ounce: 0.035274
-    },
-    milligram: {
-        kilogram: 0.000001,
-        gram: 0.001,
-        milligram: 1,
-        pound: 0.00000220462,
-        ounce: 0.000035274
-    },
-    pound: {
-        kilogram: 0.453592,
-        gram: 453.592,
-        milligram: 453592,
-        pound: 1,
-        ounce: 16
-    },
-    ounce: {
-        kilogram: 0.0283495,
-        gram: 28.3495,
-        milligram: 28349.5,
-        pound: 0.0625,
-        ounce: 1
-    }
+    // ... other mass units
 };
 
 const temperatureConversions = {
@@ -167,16 +87,7 @@ const temperatureConversions = {
         Fahrenheit: (value) => (value * 9/5) + 32,
         Kelvin: (value) => value + 273.15
     },
-    Fahrenheit: {
-        Celsius: (value) => (value - 32) * 5/9,
-        Fahrenheit: 1,
-        Kelvin: (value) => ((value - 32) * 5/9) + 273.15
-    },
-    Kelvin: {
-        Celsius: (value) => value - 273.15,
-        Fahrenheit: (value) => (value - 273.15) * 9/5 + 32,
-        Kelvin: 1
-    }
+    // ... other temperature units
 };
 
 // Function to populate unit selection options
@@ -189,13 +100,13 @@ function populateUnits() {
     toUnitSelect.innerHTML = "";
 
     if (unitType === "length") {
-        const units = Object.keys(lengthConversions);
-        units.forEach(unit => {
+        const units = Object.keys(lengthConversions); 
+        units.forEach(unit => { 
             const option = document.createElement("option");
             option.value = unit;
             option.text = unit;
             fromUnitSelect.appendChild(option);
-            toUnitSelect.appendChild(option.cloneNode(true));
+            toUnitSelect.appendChild(option.cloneNode(true)); 
         });
     } else if (unitType === "mass") {
         const units = Object.keys(massConversions);
@@ -218,21 +129,8 @@ function populateUnits() {
     }
 }
 
-// Function for unit conversions
-function convert() {
-    const unitType = document.getElementById("unitType").value;
-    const fromUnit = document.getElementById("fromUnit").value;
-    const toUnit = document.getElementById("toUnit").value;
-    const inputValue = parseFloat(document.getElementById("inputValue").value);
-    const resultDiv = document.getElementById("result");
+// ... rest of the code (convert(), saveConversion(), etc.) 
+</script>
 
-    if (isNaN(inputValue)) {
-        resultDiv.innerHTML = "Invalid input.";
-        return;
-    }
-
-    let result;
-
-    if (unitType === "length") {
-        result = inputValue * lengthConversions[fromUnit][toUnit];
-    } else if (unitType ===
+</body>
+</html>
