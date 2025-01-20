@@ -1,136 +1,150 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Engineering Unit Converter</title>
-<style>
-body {
-    font-family: sans-serif;
-}
-.container {
-    width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-}
-</style>
+    <title>Engineering Unit Converter</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Engineering Unit Converter</h1>
+    <div class="container">
+        <h1>Engineering Unit Converter</h1>
 
-    <label for="unitType">Select Unit Type:</label>
-    <select id="unitType">
-        <option value="length">Length</option>
-        <option value="mass">Mass</option>
-        <option value="temperature">Temperature</option>
-    </select>
+        <label for="unitType">Select Unit Type:</label>
+        <select id="unitType">
+            <option value="length">Length</option>
+            <option value="mass">Mass</option>
+            <option value="temperature">Temperature</option>
+        </select>
 
-    <br><br>
+        <label for="fromUnit">From Unit:</label>
+        <select id="fromUnit"></select>
 
-    <label for="fromUnit">From Unit:</label>
-    <select id="fromUnit"></select>
+        <label for="toUnit">To Unit:</label>
+        <select id="toUnit"></select>
 
-    <label for="toUnit">To Unit:</label>
-    <select id="toUnit"></select>
+        <label for="inputValue">Enter Value:</label>
+        <input type="number" id="inputValue" placeholder="Enter value">
 
-    <br><br>
+        <button onclick="convert()">Convert</button>
 
-    <label for="inputValue">Value:</label>
-    <input type="number" id="inputValue" step="any">
+        <div id="result"></div>
 
-    <button onclick="convert()">Convert</button>
+        <button onclick="saveConversion()">Save Conversion</button>
+        <ul id="savedConversions"></ul>
+    </div>
 
-    <br><br>
+    <script>
+        const unitTypes = {
+            length: {
+                units: ['meter', 'kilometer', 'centimeter', 'millimeter', 'inch', 'foot', 'mile'],
+                convert: (value, fromUnit, toUnit) => {
+                    // Implement length conversion logic here
+                }
+            },
+            mass: {
+                units: ['kilogram', 'gram', 'milligram', 'pound', 'ounce'],
+                convert: (value, fromUnit, toUnit) => {
+                    // Implement mass conversion logic here
+                }
+            },
+            temperature: {
+                units: ['celsius', 'fahrenheit', 'kelvin'],
+                convert: (value, fromUnit, toUnit) => {
+                    // Implement temperature conversion logic here
+                }
+            }
+        };
 
-    <div id="result"></div>
+        const unitTypeSelect = document.getElementById('unitType');
+        const fromUnitSelect = document.getElementById('fromUnit');
+        const toUnitSelect = document.getElementById('toUnit');
+        const inputValue = document.getElementById('inputValue');
+        const resultDiv = document.getElementById('result');
+        const savedConversionsList = document.getElementById('savedConversions');
 
-    <br><br>
-
-    <h3>Saved Conversions</h3>
-    <ul id="savedConversions"></ul>
-
-</div>
-
-<script>
-// Array to store saved conversions
-const savedConversions = [];
-
-// Conversion factors
-const lengthConversions = {
-    meter: {
-        meter: 1,
-        kilometer: 0.001,
-        centimeter: 100,
-        millimeter: 1000,
-        inch: 39.3701,
-        foot: 3.28084,
-        mile: 0.000621371
-    },
-    // ... other length units
-};
-
-const massConversions = {
-    kilogram: {
-        kilogram: 1,
-        gram: 1000,
-        milligram: 1000000,
-        pound: 2.20462,
-        ounce: 35.274
-    },
-    // ... other mass units
-};
-
-const temperatureConversions = {
-    Celsius: {
-        Celsius: 1,
-        Fahrenheit: (value) => (value * 9/5) + 32,
-        Kelvin: (value) => value + 273.15
-    },
-    // ... other temperature units
-};
-
-// Function to populate unit selection options
-function populateUnits() {
-    const unitType = document.getElementById("unitType").value;
-    const fromUnitSelect = document.getElementById("fromUnit");
-    const toUnitSelect = document.getElementById("toUnit");
-
-    fromUnitSelect.innerHTML = "";
-    toUnitSelect.innerHTML = "";
-
-    if (unitType === "length") {
-        const units = Object.keys(lengthConversions); 
-        units.forEach(unit => { 
-            const option = document.createElement("option");
-            option.value = unit;
-            option.text = unit;
-            fromUnitSelect.appendChild(option);
-            toUnitSelect.appendChild(option.cloneNode(true)); 
+        unitTypeSelect.addEventListener('change', () => {
+            const selectedType = unitTypeSelect.value;
+            populateUnitSelects(selectedType);
         });
-    } else if (unitType === "mass") {
-        const units = Object.keys(massConversions);
-        units.forEach(unit => {
-            const option = document.createElement("option");
-            option.value = unit;
-            option.text = unit;
-            fromUnitSelect.appendChild(option);
-            toUnitSelect.appendChild(option.cloneNode(true));
-        });
-    } else if (unitType === "temperature") {
-        const units = Object.keys(temperatureConversions);
-        units.forEach(unit => {
-            const option = document.createElement("option");
-            option.value = unit;
-            option.text = unit;
-            fromUnitSelect.appendChild(option);
-            toUnitSelect.appendChild(option.cloneNode(true));
-        });
-    }
-}
 
-// ... rest of the code (convert(), saveConversion(), etc.) 
-</script>
+        function populateUnitSelects(type) {
+            const units = unitTypes[type].units;
+            fromUnitSelect.innerHTML = '';
+            toUnitSelect.innerHTML = '';
+            units.forEach(unit => {
+                const option = document.createElement('option');
+                option.value = unit;
+                option.text = unit;
+                fromUnitSelect.appendChild(option);
+                toUnitSelect.appendChild(option.cloneNode(true));
+            });
+        }
+
+        function convert() {
+            const selectedType = unitTypeSelect.value;
+            const fromUnit = fromUnitSelect.value;
+            const toUnit = toUnitSelect.value;
+            const inputValueNum = parseFloat(inputValue.value);
+
+            if (isNaN(inputValueNum)) {
+                resultDiv.textContent = 'Invalid input value.';
+                return;
+            }
+
+            const result = unitTypes[selectedType].convert(inputValueNum, fromUnit, toUnit);
+            resultDiv.textContent = `${inputValueNum} ${fromUnit} is equal to ${result.toFixed(2)} ${toUnit}`;
+        }
+
+        function saveConversion() {
+            const fromUnit = fromUnitSelect.value;
+            const toUnit = toUnitSelect.value;
+            const savedItem = `${fromUnit} to ${toUnit}`;
+
+            const existingItems = Array.from(savedConversionsList.querySelectorAll('li')).map(li => li.textContent);
+            if (!existingItems.includes(savedItem)) {
+                const listItem = document.createElement('li');
+                listItem.textContent = savedItem;
+                savedConversionsList.appendChild(listItem);
+            }
+        }
+
+        // Initial setup
+        populateUnitSelects(unitTypeSelect.value); 
+    </script>
 
 </body>
 </html>
